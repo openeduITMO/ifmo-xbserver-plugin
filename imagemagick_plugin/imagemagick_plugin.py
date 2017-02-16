@@ -25,7 +25,7 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
 
     configuration_section = "ifmo_xblock_imagemagick"
 
-    @IfmoXBServerPlugin.register_method("check")
+    @IfmoXBServerPlugin.register_method("ImageMagickServerPlugin,", "check")
     @IfmoXBServerPlugin.want_xobject(XSubmission)
     def check(self, xobject):
 

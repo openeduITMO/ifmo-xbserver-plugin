@@ -19,8 +19,9 @@ class IfmoXBServerPlugin(object):
             self.configuration.update(configuration)
 
     def handle(self, event, xobject=None):
-        if event in self.events:
-            return self.events[event](self, xobject=xobject)
+        key = (self.__class__.__name__, event)
+        if key in self.events:
+            return self.events[key](self, xobject=xobject)
         else:
             msg = "Unknown method for %s plugin: %s" % (self.__class__.__name__, event)
             error_sub = XSubmission(xobject=xobject)
@@ -28,9 +29,9 @@ class IfmoXBServerPlugin(object):
             return error_sub
 
     @classmethod
-    def register_method(cls, event):
+    def register_method(cls, class_name, event):
         def handle(m):
-            cls.events[event] = m
+            cls.events[(class_name, event)] = m
             return m
         return handle
 

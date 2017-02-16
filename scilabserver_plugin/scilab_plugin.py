@@ -23,7 +23,7 @@ class ScilabServerPlugin(IfmoXBServerPlugin):
 
     configuration_section = "ifmo_xblock_scilab"
 
-    @IfmoXBServerPlugin.register_method("check")
+    @IfmoXBServerPlugin.register_method("ScilabServerPlugin", "check")
     @IfmoXBServerPlugin.want_xobject(XSubmission)
     def do_check(self, xobject):
 
@@ -125,7 +125,7 @@ class ScilabServerPlugin(IfmoXBServerPlugin):
                                       output_check=checker_code['output'])
         return xsubmission.set_grade(grade=result_grade, feedback=feedback, correctness=True, success=True)
 
-    @IfmoXBServerPlugin.register_method("generate")
+    @IfmoXBServerPlugin.register_method("ScilabServerPlugin", "generate")
     @IfmoXBServerPlugin.want_xobject(XGeneration)
     def do_generate(self, xobject):
 
