@@ -4,8 +4,8 @@ from path import path
 
 class ImageMagickConfiguration(IfmoXBServerConfiguration):
 
-    TMP_PATH = path('/tmp/xblock_imagemagick/')
-    REPORT_PATH = path("/tmp/xblock_imagemagick/reports")
+    TMP_PATH = '/tmp/xblock_imagemagick/'
+    REPORT_PATH = "/tmp/xblock_imagemagick/reports"
 
     TIMEOUT_EXEC = path("/scilab/bin/timeout")
     DEFAULT_TIMEOUT = 10

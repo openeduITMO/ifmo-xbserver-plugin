@@ -39,7 +39,8 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
         student_filename, student_file = self.get_raw_image(data, 'user_image')
         instructor_filename, instructor_file = self.get_raw_image(data, 'instructor_image')
 
-        temp_path = tempfile.mkdtemp(prefix=self.configuration.TMP_PATH.makedirs_p())
+        temp_path = path(self.configuration.TMP_PATH)
+        temp_path = tempfile.mkdtemp(prefix=temp_path.makedirs_p())
 
         student_fd, student_fullname = tempfile.mkstemp(dir=temp_path)
         with open(student_fullname, "wb") as f:
@@ -49,9 +50,10 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
         with open(instructor_fullname, "wb") as f:
             f.write(instructor_file)
 
-        self.configuration.REPORT_PATH.makedirs_p()
+        report_path = path(self.configuration.REPORT_PATH)
+        report_path.makedirs_p()
         report_filename = "%s.png" % str(uuid.uuid4())
-        report_fullname = self.configuration.REPORT_PATH / report_filename
+        report_fullname = report_path / report_filename
 
         # Подсчитаем размер изображения в пикселах
         identify_cmd = [self.configuration.IDENTIFY_EXEC, "-format", self.configuration.IDENTIFY_FORMAT, instructor_fullname]
