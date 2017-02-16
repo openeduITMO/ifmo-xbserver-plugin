@@ -23,6 +23,8 @@ logger = logging.getLogger(__name__)
 @IfmoXBServerPlugin.register_default_config(ImageMagickConfiguration)
 class ImageMagickServerPlugin(IfmoXBServerPlugin):
 
+    configuration_section = "ifmo_xblock_imagemagick"
+
     @IfmoXBServerPlugin.register_method("check")
     @IfmoXBServerPlugin.want_xobject(XSubmission)
     def check(self, xobject):
