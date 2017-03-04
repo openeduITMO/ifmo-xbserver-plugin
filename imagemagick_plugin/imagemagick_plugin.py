@@ -122,6 +122,16 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
             feedback = self.make_feedback(output=compare_result["output"], err_output=compare_result["err_output"],
                                           report_file=report_filename)
 
+            # Сожмём отчёт о проверки, чтобы он уместился
+            report_size = extra_cmd_settings.get("report_size", self.configuration.DEFAULT_REPORT_SIZE)
+            convert_cmd = [self.configuration.CONVERT_EXEC,
+                           "-resize",
+                           "%sx%s>" % ((report_size,)*2),
+                           report_fullname,
+                           report_fullname
+                           ]
+            self.spawn_compare(convert_cmd)
+
             if correct:
                 xobject.set_grade(feedback=feedback, grade=1, success=True, correctness=True)
             else:
