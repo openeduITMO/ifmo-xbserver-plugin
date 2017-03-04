@@ -14,3 +14,9 @@ class ImageMagickConfiguration(IfmoXBServerConfiguration):
 
     IDENTIFY_EXEC = path("identify")
     IDENTIFY_FORMAT = "%[fx:h*w]"
+
+    CONVERT_EXEC = path("convert")
+
+    DEFAULT_BASE_THRESHOLD = 50
+    DEFAULT_SCALE_THRESHOLD = 80
+    DEFAULT_QUALITY_FUZZ = 0

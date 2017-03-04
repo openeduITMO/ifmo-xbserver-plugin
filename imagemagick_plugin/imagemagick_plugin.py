@@ -55,13 +55,61 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
         report_filename = "%s.png" % str(uuid.uuid4())
         report_fullname = report_path / report_filename
 
+        # Получаем дополнительные настройки
+        extra_cmd_settings = {}
+        try:
+            extra_cmd_settings = json.loads(grader_payload.get("extra_cmd_settings"))
+        except (ValueError, TypeError):
+            logger.warning("extra_cmd_settings is malformed, continue with no settings")
+
+        # Вырежем whitespace у пользовательского изображения
+        convert_cmd = [self.configuration.CONVERT_EXEC,
+                       "-threshold",
+                       "%s%%" % extra_cmd_settings.get("base_threshold", self.configuration.DEFAULT_BASE_THRESHOLD),
+                       "-trim",
+                       "-fuzz",
+                       "%s%%" % extra_cmd_settings.get("quality_fuzz", self.configuration.DEFAULT_QUALITY_FUZZ),
+                       student_fullname,
+                       "%s.converted" % student_fullname,
+                       ]
+        self.spawn_compare(convert_cmd)
+
+        # Получим размер у получившегося изображения
+        identify_cmd = [self.configuration.IDENTIFY_EXEC,
+                        "-format", "%wx%h",
+                        "%s.converted" % student_fullname,
+                        ]
+        identify_result = self.spawn_compare(identify_cmd)
+
+        # Вырежем whitespace у эталонного изображение и отрескейлим его до пользователького
+        convert_cmd = [self.configuration.CONVERT_EXEC,
+                       "-threshold",
+                       "%s%%" % extra_cmd_settings.get("base_threshold", self.configuration.DEFAULT_BASE_THRESHOLD),
+                       "-trim",
+                       "-fuzz",
+                       "%s%%" % extra_cmd_settings.get("quality_fuzz", self.configuration.DEFAULT_QUALITY_FUZZ),
+                       "-resize", "%s!" % identify_result["output"],
+                       "-threshold",
+                       "%s%%" % extra_cmd_settings.get("scale_threshold", self.configuration.DEFAULT_SCALE_THRESHOLD),
+                       instructor_fullname,
+                       "%s.converted" % instructor_fullname,
+                       ]
+        self.spawn_compare(convert_cmd)
+
         # Подсчитаем размер изображения в пикселах
-        identify_cmd = [self.configuration.IDENTIFY_EXEC, "-format", self.configuration.IDENTIFY_FORMAT, instructor_fullname]
+        identify_cmd = [self.configuration.IDENTIFY_EXEC,
+                        "-format", self.configuration.IDENTIFY_FORMAT,
+                        "%s.converted" % instructor_fullname,
+                        ]
         identify_result = self.spawn_compare(identify_cmd)
         total_size = float(identify_result["output"])
 
         # Запуск compare
-        compare_cmd = [self.configuration.COMPARE_EXEC, student_fullname, instructor_fullname, report_fullname]
+        compare_cmd = [self.configuration.COMPARE_EXEC,
+                       "%s.converted" % student_fullname,
+                       "%s.converted" % instructor_fullname,
+                       report_fullname
+                       ]
 
         if grader_payload.get("allowable_fuzz"):
             compare_cmd[1:1] = ["-fuzz", str(grader_payload.get("allowable_fuzz"))+"%", "-metric", "ae"]
