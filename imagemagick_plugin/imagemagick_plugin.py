@@ -64,8 +64,8 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
 
         # Вырежем whitespace у пользовательского изображения
         convert_cmd = [self.configuration.CONVERT_EXEC,
-                       "-threshold",
-                       "%s%%" % extra_cmd_settings.get("base_threshold", self.configuration.DEFAULT_BASE_THRESHOLD),
+                       # "-threshold",
+                       # "%s%%" % extra_cmd_settings.get("base_threshold", self.configuration.DEFAULT_BASE_THRESHOLD),
                        "-trim",
                        "-fuzz",
                        "%s%%" % extra_cmd_settings.get("quality_fuzz", self.configuration.DEFAULT_QUALITY_FUZZ),
@@ -75,22 +75,22 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
         self.spawn_compare(convert_cmd)
 
         # Получим размер у получившегося изображения
-        identify_cmd = [self.configuration.IDENTIFY_EXEC,
-                        "-format", "%wx%h",
-                        "%s.converted" % student_fullname,
-                        ]
-        identify_result = self.spawn_compare(identify_cmd)
+        # identify_cmd = [self.configuration.IDENTIFY_EXEC,
+        #                 "-format", "%wx%h",
+        #                 "%s.converted" % student_fullname,
+        #                 ]
+        # identify_result = self.spawn_compare(identify_cmd)
 
         # Вырежем whitespace у эталонного изображение и отрескейлим его до пользователького
         convert_cmd = [self.configuration.CONVERT_EXEC,
-                       "-threshold",
-                       "%s%%" % extra_cmd_settings.get("base_threshold", self.configuration.DEFAULT_BASE_THRESHOLD),
+                       # "-threshold",
+                       # "%s%%" % extra_cmd_settings.get("base_threshold", self.configuration.DEFAULT_BASE_THRESHOLD),
                        "-trim",
                        "-fuzz",
                        "%s%%" % extra_cmd_settings.get("quality_fuzz", self.configuration.DEFAULT_QUALITY_FUZZ),
-                       "-resize", "%s!" % identify_result["output"],
-                       "-threshold",
-                       "%s%%" % extra_cmd_settings.get("scale_threshold", self.configuration.DEFAULT_SCALE_THRESHOLD),
+                       # "-resize", "%s!" % identify_result["output"],
+                       # "-threshold",
+                       # "%s%%" % extra_cmd_settings.get("scale_threshold", self.configuration.DEFAULT_SCALE_THRESHOLD),
                        instructor_fullname,
                        "%s.converted" % instructor_fullname,
                        ]
