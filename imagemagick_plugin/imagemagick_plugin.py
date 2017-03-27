@@ -70,7 +70,7 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
                        "-fuzz",
                        "%s%%" % extra_cmd_settings.get("quality_fuzz", self.configuration.DEFAULT_QUALITY_FUZZ),
                        student_fullname,
-                       "%s.converted" % student_fullname,
+                       "png:%s.converted" % student_fullname,
                        ]
         self.spawn_compare(convert_cmd)
 
@@ -92,22 +92,22 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
                        # "-threshold",
                        # "%s%%" % extra_cmd_settings.get("scale_threshold", self.configuration.DEFAULT_SCALE_THRESHOLD),
                        instructor_fullname,
-                       "%s.converted" % instructor_fullname,
+                       "png:%s.converted" % instructor_fullname,
                        ]
         self.spawn_compare(convert_cmd)
 
         # Подсчитаем размер изображения в пикселах
         identify_cmd = [self.configuration.IDENTIFY_EXEC,
                         "-format", self.configuration.IDENTIFY_FORMAT,
-                        "%s.converted" % instructor_fullname,
+                        "png:%s.converted" % instructor_fullname,
                         ]
         identify_result = self.spawn_compare(identify_cmd)
         total_size = float(identify_result["output"])
 
         # Запуск compare
         compare_cmd = [self.configuration.COMPARE_EXEC,
-                       "%s.converted" % student_fullname,
-                       "%s.converted" % instructor_fullname,
+                       "png:%s.converted" % student_fullname,
+                       "png:%s.converted" % instructor_fullname,
                        report_fullname
                        ]
 
