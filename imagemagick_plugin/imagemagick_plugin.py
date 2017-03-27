@@ -66,7 +66,7 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
         convert_cmd = [self.configuration.CONVERT_EXEC,
                        # "-threshold",
                        # "%s%%" % extra_cmd_settings.get("base_threshold", self.configuration.DEFAULT_BASE_THRESHOLD),
-                       "-trim",
+                       # "-trim",
                        "-fuzz",
                        "%s%%" % extra_cmd_settings.get("quality_fuzz", self.configuration.DEFAULT_QUALITY_FUZZ),
                        student_fullname,
@@ -74,18 +74,11 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
                        ]
         self.spawn_compare(convert_cmd)
 
-        # Получим размер у получившегося изображения
-        # identify_cmd = [self.configuration.IDENTIFY_EXEC,
-        #                 "-format", "%wx%h",
-        #                 "%s.converted" % student_fullname,
-        #                 ]
-        # identify_result = self.spawn_compare(identify_cmd)
-
         # Вырежем whitespace у эталонного изображение и отрескейлим его до пользователького
         convert_cmd = [self.configuration.CONVERT_EXEC,
                        # "-threshold",
                        # "%s%%" % extra_cmd_settings.get("base_threshold", self.configuration.DEFAULT_BASE_THRESHOLD),
-                       "-trim",
+                       # "-trim",
                        "-fuzz",
                        "%s%%" % extra_cmd_settings.get("quality_fuzz", self.configuration.DEFAULT_QUALITY_FUZZ),
                        # "-resize", "%s!" % identify_result["output"],
@@ -125,6 +118,7 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
             # Сожмём отчёт о проверки, чтобы он уместился
             report_size = extra_cmd_settings.get("report_size", self.configuration.DEFAULT_REPORT_SIZE)
             convert_cmd = [self.configuration.CONVERT_EXEC,
+                           "-trim",
                            "-resize",
                            "%sx%s>" % ((report_size,)*2),
                            report_fullname,
