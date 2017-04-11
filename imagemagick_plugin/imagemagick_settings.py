@@ -21,3 +21,4 @@ class ImageMagickConfiguration(IfmoXBServerConfiguration):
     DEFAULT_SCALE_THRESHOLD = 80
     DEFAULT_QUALITY_FUZZ = 0
     DEFAULT_REPORT_SIZE = 400
+    DEFAULT_CUT_OFF = 30
