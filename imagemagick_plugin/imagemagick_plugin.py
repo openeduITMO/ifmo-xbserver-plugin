@@ -111,7 +111,7 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
 
         if compare_result["code"] in [0, 1]:
 
-            cut_off = grader_payload.get("cut_off", self.configuration.DEFAULT_CUT_OFF)
+            cut_off = extra_cmd_settings.get("cut_off", self.configuration.DEFAULT_CUT_OFF)
             correct = None
             try:
                 if str(cut_off).endswith("%"):
