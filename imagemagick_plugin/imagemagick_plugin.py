@@ -112,11 +112,22 @@ class ImageMagickServerPlugin(IfmoXBServerPlugin):
         if compare_result["code"] in [0, 1]:
 
             cut_off = grader_payload.get("cut_off", self.configuration.DEFAULT_CUT_OFF)
-            if str(cut_off).endswith("%"):
-                cut_off = int(cut_off[:-1])
-                correct = (int(compare_result["err_output"]) / total_size * 100) <= cut_off
-            else:
-                cut_off = int(cut_off)
+            correct = None
+            try:
+                if str(cut_off).endswith("%"):
+                    cut_off = int(cut_off[:-1])
+                    correct = (int(compare_result["err_output"]) / total_size * 100) <= cut_off
+            except ValueError:
+                pass
+
+            if correct is None:
+                try:
+                    cut_off = int(cut_off)
+                except ValueError:
+                    logger.warning("Parameter cut_off=\"%s\" replaced with \"%s\"" %
+                                   (cut_off, self.configuration.DEFAULT_CUT_OFF))
+                    cut_off = self.configuration.DEFAULT_CUT_OFF
+
                 correct = int(compare_result["err_output"]) <= cut_off
 
             feedback = self.make_feedback(output=compare_result["output"], err_output=compare_result["err_output"],
