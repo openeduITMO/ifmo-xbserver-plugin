@@ -1,4 +1,4 @@
-requests==2.9.1
+requests==2.20.0
 path.py==8.1.2
 
 -e git+https://github.com/openeduITMO/ifmo-xqueue-api@902c1c34ff28288c50700058f1fd74ca7cea7379#egg=ifmo-xqueue-api==4.2
