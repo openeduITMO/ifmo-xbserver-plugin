@@ -1,8 +1,11 @@
 import functools
+import logging
 
 from xqueue_api.xsubmission import XSubmission
 
 from .configuration import IfmoXBServerConfiguration
+
+logger = logging.getLogger(__name__)
 
 
 class IfmoXBServerPlugin(object):
@@ -21,7 +24,14 @@ class IfmoXBServerPlugin(object):
     def handle(self, event, xobject=None):
         key = (self.__class__.__name__, event)
         if key in self.events:
-            return self.events[key](self, xobject=xobject)
+            try:
+                return self.events[key](self, xobject=xobject)
+            except Exception as e:  # noqa
+                logger.exception('Failed to handle submission')
+                error_sub = XSubmission(xobject=xobject)
+                error_sub.set_grade(grade=0, feedback=msg, correctness=False, success=False)
+                return str(e)
+
         else:
             msg = "Unknown method for %s plugin: %s" % (self.__class__.__name__, event)
             error_sub = XSubmission(xobject=xobject)
