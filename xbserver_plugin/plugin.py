@@ -32,7 +32,7 @@ class IfmoXBServerPlugin(object):
                 logger.exception('Failed to handle submission')
                 error_sub = XSubmission(xobject=xobject)
                 error_sub.set_grade(grade=0, feedback='Не удалось проверить решение', correctness=False, success=False)
-                return str(e)
+                return error_sub
 
         else:
             msg = "Unknown method for %s plugin: %s" % (self.__class__.__name__, event)
