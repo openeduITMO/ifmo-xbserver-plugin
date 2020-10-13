@@ -29,7 +29,7 @@ class IfmoXBServerPlugin(object):
             except Exception as e:  # noqa
                 logger.exception('Failed to handle submission')
                 error_sub = XSubmission(xobject=xobject)
-                error_sub.set_grade(grade=0, feedback=msg, correctness=False, success=False)
+                error_sub.set_grade(grade=0, feedback='Не удалось проверить решение', correctness=False, success=False)
                 return str(e)
 
         else:
